@@ -1,6 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
 
+const users = require("./routes/api/users");
+const profile = require("./routes/api/profile");
+const posts = require("./routes/api/posts");
+
 // initalize a variable called app to express
 const app = express();
 
