@@ -16,6 +16,7 @@ router.get("/test", (req, res) => res.json({ msg: "Users Works" }));
 // @route           GET REQUEST api/users/register
 // @description     Register User
 // @access          Public
+
 router.post("/register", (req, res) => {
   //searching for the email that the user is trying to register with
   //to use req.body we need to bring in Body Parser
@@ -50,6 +51,38 @@ router.post("/register", (req, res) => {
     }
   });
   msg: "New User Added";
+});
+
+// @route           GET REQUEST api/users/login
+// @description     Login User / Returning Json Web Token
+// @access          Public
+
+router.post("/login", (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  // Find User by Email
+  User.findOne({ email }).then(user => {
+    // Check for user
+    if (!user) {
+      return res
+        .status(404)
+        .json({ email: "User not found, go look somewhere else" });
+    }
+
+    // Check Passowrd
+    // brcypt to compare the hashed password to the proper one
+    // pass in the plain text password (password) and then the hashed password (user.password)
+    bcrypt.compare(password, user.password).then(isMatch => {
+      if (isMatch) {
+        res.json({ msg: "Triumphant" });
+      } else {
+        return res
+          .status(400)
+          .json({ password: "Password incorrect, leave plesae" });
+      }
+    });
+  });
 });
 
 module.exports = router;
