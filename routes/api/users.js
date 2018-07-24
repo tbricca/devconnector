@@ -30,7 +30,7 @@ router.post("/register", (req, res) => {
         d: "mm" // Default
       });
 
-      // when creatign a resource w/ mongoose you want to say new andd then the model name and then pass in the data as an object
+      // when creating a resource w/ mongoose you want to say new andd then the model name and then pass in the data as an object
       const newUser = new User({
         name: req.body.name,
         email: req.body.email,
@@ -41,7 +41,7 @@ router.post("/register", (req, res) => {
       bcrypt.genSalt(10, (err, salt) => {
         bcrypt.hash(newUser.password, salt, (err, hash) => {
           if (err) throw err;
-          newUser.apssword = hash;
+          newUser.password = hash;
           newUser
             .save()
             .then(user => res.json(user))
@@ -54,7 +54,7 @@ router.post("/register", (req, res) => {
 });
 
 // @route           GET REQUEST api/users/login
-// @description     Login User / Returning Json Web Token
+// @description     Login User / Returning Json Web Token (JWT)
 // @access          Public
 
 router.post("/login", (req, res) => {
@@ -79,7 +79,7 @@ router.post("/login", (req, res) => {
       } else {
         return res
           .status(400)
-          .json({ password: "Password incorrect, leave plesae" });
+          .json({ password: "Password incorrect, leave please" });
       }
     });
   });
