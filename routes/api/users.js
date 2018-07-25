@@ -4,6 +4,7 @@ const router = express.Router();
 const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const keys = require("../../config/keys");
 
 // Load User model
 const User = require("../../models/User");
@@ -81,7 +82,19 @@ router.post("/login", (req, res) => {
         const payload = { id: user.id, name: user.name, avatar: user.avatar }; // Create JWT Payload
 
         // Sign Token
-        jwt.sign(payload);
+
+        jwt.sign(
+          payload,
+          keys.secretorKey,
+          { expiresIn: 3600 }, //Have it expire after an hour for security
+          (err, token) => {
+            res.json({
+              sucess: true,
+              //bearer token
+              token: "Bearer" + token
+            });
+          }
+        );
       } else {
         return res
           .status(400)
